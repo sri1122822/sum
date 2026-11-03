@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ChatBot</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="chatBot">
+    <header>
+        <h2>ChatBot</h2>
+        <span onclick="cancel()">X</span>
+    </header>
+
+    <ul class="chatbox">
+        <li class="chat chat-incoming">
+            <p>Hey! How can I assist you today?</p>
+        </li>
+    </ul>
+
+    <div class="chat-input">
+        <textarea placeholder="Enter a message..."></textarea>
+        <button id="sendBTN">Send</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
+
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f7f7f7;
+}
+
+.chatBot {
+    width: 400px;
+    height: 550px;
+    margin: 50px auto;
+    background: white;
+    border: 2px solid #2F8D46;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+header {
+    background: #2F8D46;
+    color: white;
+    text-align: center;
+    padding: 15px;
+}
+
+header span {
+    float: right;
+    cursor: pointer;
+}
+
+.chatbox {
+    height: 390px;
+    padding: 15px;
+    list-style: none;
+    overflow-y: auto;
+}
+
+.chat {
+    margin-bottom: 15px;
+}
+
+.chat p {
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 80%;
+}
+
+.chat-incoming p {
+    background: #eaeaea;
+}
+
+.chat-outgoing p {
+    background: #162887;
+    color: white;
+    margin-left: auto;
+}
+
+.error {
+    background: red !important;
+    color: white;
+}
+
+.chat-input {
+    padding: 10px;
+    border-top: 1px solid #ccc;
+}
+
+textarea {
+    width: 100%;
+    height: 55px;
+    padding: 10px;
+    resize: none;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    background: #2F8D46;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+
+
+
+const input = document.querySelector("textarea");
+const sendBtn = document.querySelector("#sendBTN");
+const chatbox = document.querySelector(".chatbox");
+
+// Create chat message
+function createMessage(message, type) {
+    const li = document.createElement("li");
+    const p = document.createElement("p");
+
+    li.className = "chat " + type;
+    p.textContent = message;
+
+    li.appendChild(p);
+    return li;
+}
+
+// Send message to backend
+async function generateResponse(message, chatMessage) {
+    try {
+        const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ message })
+        });
+
+        if (!response.ok) {
+            throw new Error("API error");
+        }
+
+        const data = await response.json();
+        chatMessage.querySelector("p").textContent = data.reply;
+
+    } catch (error) {
+        chatMessage.querySelector("p").textContent =
+            "Oops! Something went wrong.";
+
+        chatMessage.querySelector("p").classList.add("error");
+    }
+
+    chatbox.scrollTop = chatbox.scrollHeight;
+}
+
+// Handle user message
+function handleChat() {
+    const message = input.value.trim();
+
+    if (!message) return;
+
+    chatbox.appendChild(createMessage(message, "chat-outgoing"));
+    input.value = "";
+
+    const botMessage = createMessage("Thinking...", "chat-incoming");
+    chatbox.appendChild(botMessage);
+
+    chatbox.scrollTop = chatbox.scrollHeight;
+
+    generateResponse(message, botMessage);
+}
+
+// Send button
+sendBtn.addEventListener("click", handleChat);
+
+// Close chatbot
+function cancel() {
+    document.querySelector(".chatBot").style.display = "none";
+}

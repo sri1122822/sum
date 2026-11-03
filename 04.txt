@@ -1,0 +1,116 @@
+calculatorTitle.js
+Copy code
+import React from "react";
+const CalculatorTitle = (props) => {
+   return (
+   <div className="calculator-title">{props.value}</div>
+   );
+};
+export default CalculatorTitle;
+
+
+
+outputScreenRow.js
+Copy code
+import React from "react";
+const OutputScreenRow = () => {
+   return (
+      <div className="screen-row">
+        <input type="text" readOnly />
+      </div>
+   );
+};
+export default OutputScreenRow;
+
+
+
+outputScreen.js
+import React from "react";
+import OutputScreenRow from "./outputScreenRow.js"; // Import Output Screen Row.
+// Functional Component.
+// Use to hold two Screen Rows.
+const OutputScreen = () => {
+   return (
+      <div className="screen">
+        <OutputScreenRow />
+        <OutputScreenRow />
+      </div>
+   );
+};
+export default OutputScreen; // Export Output Screen.
+
+
+
+
+button.js
+
+// button.js File
+import React from "react"; // Import React (Mandatory Step)
+// Create our Button component as a functional component.
+const Button = (props) =>{
+ return (
+ <input type="button" value={props.label} />
+ );
+};
+export default Button; // Export our button component
+
+
+
+
+// calculator.js File
+calculator.js
+
+// Imports.
+import React from "react";
+import CalculatorTitle from "./calculatorTitle.js";
+import OutputScreen from "./outputScreen.js";
+import Button from "./button.js";
+class Calculator extends React.Component {
+   render() {
+     return (
+        <div className="frame">
+          <CalculatorTitle value="GeeksforGeeks Calculator" />
+          <div class="mainCalc">
+            <OutputScreen />
+            <div className="button-row">
+              <Button label={"Clear"} />
+              <Button label={"Delete"} />
+              <Button label={"."} />
+              <Button label={"/"} />
+            </div>
+            <div className="button-row">
+              <Button label={"7"} />
+              <Button label={"8"} />
+              <Button label={"9"} />
+              <Button label={"*"} />
+            </div>
+            <div className="button-row">
+              <Button label={"4"} />
+              <Button label={"5"} />
+              <Button label={"6"} />
+              <Button label={"-"} />
+            </div>
+            <div className="button-row">
+              <Button label={"1"} />
+              <Button label={"2"} />
+              <Button label={"3"} />
+              <Button label={"+"} />
+            </div>
+            <div className="button-row">
+              <Button label={"0"} />
+              <Button label={"="} />
+            </div>
+          </div>
+        </div>
+     );
+   }
+}
+export default Calculator;
+
+
+index.js
+Copy code
+import React from "react";
+import ReactDOMfrom "react-dom";
+import Calculator from "./components/calculator.js";
+ReactDOM.render(<Calculator />, document.getElementById("root"));

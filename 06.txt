@@ -1,0 +1,55 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Password Strength</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <style>
+        .container {
+            width: 400px;
+            margin-top: 50px;
+            padding: 20px;
+            box-shadow: 0 0 10px gray;
+        }
+        .progress { height: 8px; }
+    </style>
+</head>
+<body>
+
+<div class="container text-center">
+    <h2>Enter Password</h2>
+
+    <input type="password" id="password"
+           class="form-control" placeholder="Enter Password">
+
+    <br>
+
+    <div class="progress">
+        <div class="progress-bar" style="width:0%"></div>
+    </div>
+
+    <button class="btn btn-success btn-block">Register</button>
+</div>
+
+<script>
+$("#password").keyup(function() {
+    let p = $(this).val();
+    let score = 0;
+
+    if (p.length >= 6) score += 20;
+    if (p.length >= 8) score += 20;
+    if (/[a-z]/.test(p)) score += 15;
+    if (/[A-Z]/.test(p)) score += 15;
+    if (/[0-9]/.test(p)) score += 15;
+    if (/\W/.test(p)) score += 15;
+
+    $(".progress-bar")
+        .css("width", score + "%")
+        .css("background", score < 40 ? "red" : score < 70 ? "orange" : "green");
+});
+</script>
+
+</body>
+</html>

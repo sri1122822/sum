@@ -1,0 +1,81 @@
+App.js
+
+import React, { useState } from 'react';
+import './App.css';
+
+function App() {
+    const [items, setItems] = useState([]);
+
+    const handleDrop = (e) => {
+        e.preventDefault();
+        const type = e.dataTransfer.getData('type');
+        setItems([...items, { id: Date.now(), type }]);
+    };
+
+    return (
+        <div className="app">
+
+            <div className="toolbox">
+                <h3>Toolbox</h3>
+
+                {['text', 'button', 'image'].map(type => (
+                    <div
+                        draggable
+                        onDragStart={e => e.dataTransfer.setData('type', type)}
+                    >
+                        {type}
+                    </div>
+                ))}
+            </div>
+
+            <div className="canvas"
+                onDrop={handleDrop}
+                onDragOver={e => e.preventDefault()}>
+
+                <h3>Canvas</h3>
+
+                {items.map(item => (
+                    <div key={item.id}>
+                        {item.type === 'text' && <input placeholder="Enter text" />}
+                        {item.type === 'button' && <button>Click Me</button>}
+                        {item.type === 'image' &&
+                            <img src="https://via.placeholder.com/100" alt="Sample" />}
+                    </div>
+                ))}
+            </div>
+
+        </div>
+    );
+}
+
+export default App;
+
+
+
+2. App.css
+
+.app {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+}
+
+.toolbox {
+    width: 200px;
+    padding: 15px;
+    background: #eee;
+}
+
+.toolbox div {
+    padding: 10px;
+    margin: 10px;
+    background: #ddd;
+    cursor: grab;
+}
+
+.canvas {
+    flex: 1;
+    min-height: 400px;
+    padding: 15px;
+    border: 2px dashed gray;
+}

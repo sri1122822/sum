@@ -1,0 +1,95 @@
+1. LoginForm.js
+
+import React, { useState } from 'react';
+
+function LoginForm() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+
+    function handleSubmit(e) {
+        e.preventDefault();
+
+        if (!email || !email.includes('@')) {
+            setError("Enter valid email");
+        }
+        else if (!password) {
+            setError("Enter password");
+        }
+        else {
+            setError("Login Successful!");
+            setEmail('');
+            setPassword('');
+        }
+    }
+
+    return (
+        <div>
+            <h2>Login Form</h2>
+
+            <form onSubmit={handleSubmit}>
+                <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                />
+                <br /><br />
+
+                <input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                />
+                <br /><br />
+
+                <button type="submit">Login</button>
+                <p>{error}</p>
+            </form>
+        </div>
+    );
+}
+
+export default LoginForm;
+
+
+
+2. App.js
+
+import React from 'react';
+import LoginForm from './LoginForm';
+
+function App() {
+    return <LoginForm />;
+}
+
+export default App;
+
+
+
+3. App.css
+
+body {
+    font-family: Arial;
+    background: #f4f4f4;
+}
+
+div {
+    text-align: center;
+}
+
+input, button {
+    padding: 10px;
+    margin: 5px;
+}
+
+button {
+    background: blue;
+    color: white;
+    border: none;
+}
+
+p {
+    color: red;
+}

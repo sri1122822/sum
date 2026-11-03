@@ -1,0 +1,76 @@
+1. firebase.js
+
+import { initializeApp } from 'firebase/app';
+import { getFirestore } from 'firebase/firestore';
+
+const app = initializeApp({
+    apiKey: "YOUR_API_KEY",
+    authDomain: "your-app.firebaseapp.com",
+    projectId: "your-app-id"
+});
+
+export const db = getFirestore(app);
+
+
+2. App.js
+
+
+import React, { useState, useEffect } from 'react';
+import { db } from './firebase';
+import { collection, addDoc, getDocs, deleteDoc, doc }
+from 'firebase/firestore';
+
+function App() {
+    const [task, setTask] = useState('');
+    const [tasks, setTasks] = useState([]);
+
+    const ref = collection(db, 'tasks');
+
+    // Display tasks
+    async function getTasks() {
+        const data = await getDocs(ref);
+        setTasks(data.docs.map(d => ({ ...d.data(), id: d.id })));
+    }
+
+    // Add task
+    async function addTask() {
+        if (!task.trim()) return;
+
+        await addDoc(ref, { text: task });
+        setTask('');
+        getTasks();
+    }
+
+    // Delete task
+    async function deleteTask(id) {
+        await deleteDoc(doc(db, 'tasks', id));
+        getTasks();
+    }
+
+    useEffect(() => {
+        getTasks();
+    }, []);
+
+    return (
+        <div>
+            <h2>Firebase TODO</h2>
+
+            <input
+                value={task}
+                onChange={e => setTask(e.target.value)}
+                placeholder="Enter task"
+            />
+
+            <button onClick={addTask}>Add Task</button>
+
+            {tasks.map(t => (
+                <p key={t.id}>
+                    {t.text}
+                    <button onClick={() => deleteTask(t.id)}>X</button>
+                </p>
+            ))}
+        </div>
+    );
+}
+
+export default App;
